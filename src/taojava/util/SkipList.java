@@ -1,6 +1,8 @@
 package taojava.util;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Random;
 
 /**
  * A randomized implementation of sorted lists.  
@@ -14,6 +16,11 @@ public class SkipList<T extends Comparable<T>>
   // +--------+----------------------------------------------------------
   // | Fields |
   // +--------+
+  public final int MAX_LEVEL = 20;
+  Node header;
+  double prob;
+
+  //Iterator iter;
 
   // +------------------+------------------------------------------------
   // | Internal Classes |
@@ -32,15 +39,46 @@ public class SkipList<T extends Comparable<T>>
      * The value stored in the node.
      */
     T val;
+    ArrayList<NodeLevel> levels;
+    public Node()
+    {
+      levels= new ArrayList<NodeLevel>();
+    }
+  } // class Node
+
+  public class NodeLevel
+  {
+    NodeLevel next;
+    Node ownNode;
+    public NodeLevel(Node ownNode, NodeLevel next)
+    {
+      this.ownNode = ownNode;
+      this.next = next;
+    }
   } // class Node
 
   // +--------------+----------------------------------------------------
   // | Constructors |
   // +--------------+
+  public SkipList()
+  {
+    this.header=new Node();
+    this.header.levels.add(null);
+    this.prob = .5; //the probability that determines height
+
+  }//SkipList constructor
 
   // +-------------------------+-----------------------------------------
   // | Internal Helper Methods |
   // +-------------------------+
+  public int randomLevel()
+  {
+    int newLevel = 1;
+    Random rand = new Random();
+    while (rand.nextDouble() < prob)
+      newLevel++;
+    return Math.min(newLevel, MAX_LEVEL);
+  }
 
   // +-----------------------+-------------------------------------------
   // | Methods from Iterable |
@@ -53,8 +91,23 @@ public class SkipList<T extends Comparable<T>>
    */
   public Iterator<T> iterator()
   {
-    // STUB
-    return null;
+    // An underlying iterator.
+    return new Iterator<T>()
+      {
+        Node cursor = header;
+
+        public T next()
+        {
+          //cursor = cursor.levels.get(0);
+          return cursor.val;
+        } // next()
+
+        public boolean hasNext()
+        {
+          return cursor.levels.get(0) != null;
+        } // hasNext()
+
+      }; // new Iterator<T>
   } // iterator()
 
   // +------------------------+------------------------------------------
@@ -70,7 +123,31 @@ public class SkipList<T extends Comparable<T>>
    */
   public void add(T val)
   {
-    // STUB
+    Node newNode = new Node();
+    newNode.val = val; //set the node value
+
+    int newLevel = randomLevel();
+    for (int i = 0; i < newLevel; i++)
+      {
+        newNode.levels.add(i, new NodeLevel(newNode, null)); //sets newNodes pointers to null
+      }
+
+    if (header.levels.size() < newLevel) //connect the header if new is higher
+      for (int i = header.levels.size(); i < newLevel; i++)
+        header.levels.set(i, newNode.levels.get(i));
+
+    //go through the rest of the list and make connections
+    Node currentNode = header;
+    while (currentNode != newNode)
+      {
+        for (int i = 0; i < currentNode.levels.size(); i++)
+          {
+            if (currentNode.levels.get(i) == null)
+              {
+                currentNode.levels.get(i).next = newNode.levels.get(i);
+              } // if
+          } // for
+      } // while
   } // add(T val)
 
   /**
@@ -78,7 +155,15 @@ public class SkipList<T extends Comparable<T>>
    */
   public boolean contains(T val)
   {
-    // STUB
+    Node currentNode = header;
+    if (currentNode.val != val)
+      {
+        currentNode = currentNode.levels.get(0).next.ownNode;
+      } // if
+    else
+      {
+        return true;
+      }
     return false;
   } // contains(T)
 
@@ -118,6 +203,5 @@ public class SkipList<T extends Comparable<T>>
     // STUB
     return 0;
   } // length()
-
 
 } // class SkipList<T>
