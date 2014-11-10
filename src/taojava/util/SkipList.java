@@ -16,7 +16,7 @@ public class SkipList<T extends Comparable<T>>
   // +--------+----------------------------------------------------------
   // | Fields |
   // +--------+
-  public final int MAX_LEVEL = 20;
+  public final int MAX_LEVEL = 19;
   Node header;
   double prob;
 
@@ -73,9 +73,9 @@ public class SkipList<T extends Comparable<T>>
   // +-------------------------+-----------------------------------------
   // | Internal Helper Methods |
   // +-------------------------+
-  public int randomLevel()
+  public int randomLevel() //returns a new level between 0 and 19
   {
-    int newLevel = 1;
+    int newLevel = 0;
     Random rand = new Random();
     while (rand.nextDouble() < prob)
       newLevel++;
@@ -138,46 +138,62 @@ public class SkipList<T extends Comparable<T>>
 
     int newLevel = randomLevel();
     System.out.println("newLevel: " + newLevel);
-    for (int i = 0; i < newLevel; i++)
+    for (int i = 0; i <= newLevel; i++)
       {
         newNode.levels.add(i, new NodeLevel(newNode, null)); //sets newNodes pointers to null
       }
-    if (length() == 0)
-      header.levels.set(0, new NodeLevel(header, newNode.levels.get(0)));
-
-    if (header.levels.size() < newLevel) //connect the header if new is higher
-      for (int i = header.levels.size(); i < newLevel; i++)
+    //if (length() == 0)
+      //header.levels.set(0, new NodeLevel(header, newNode.levels.get(0)));
+    int level=header.levels.size()-1;
+    if (level < newLevel) //connect the header if new is higher
+      for (int i = header.levels.size(); i <= newLevel; i++)
         //header.levels.add(i, newNode.levels.get(i));
         header.levels.add(i, new NodeLevel(header, newNode.levels.get(i)));
 
     //go through the rest of the list and make connections
     Node currentNode = header;
-    int level = header.levels.size() - 1;
+    //int level = header.levels.size() - 1;
     NodeLevel currentLevel;
     //NodeLevel currentLevel = header.levels.get(header.levels.size() - 1);
-    /*
-    while (currentNode != newNode && level >= 0)
+    boolean done=false;
+    while (!done)
       {
+        System.out.println("currentNode==newNode "+(currentNode==newNode));
+        System.out.println("currentNode val= "+currentNode.val);
         currentLevel = currentNode.levels.get(level);
+        System.out.println("current level: "+level);
+        //System.out.println("next node: "+ currentLevel.next.ownNode);
+        
         if (currentLevel.next != null) //move sideways
           {
-            System.out.println("moving sideways");
+            System.out.println("moving sideways from "+currentNode.val+" to "+currentLevel.next.ownNode.val);
             currentNode = currentLevel.next.ownNode;
           }
-        if (currentLevel.next == null)
+        if(currentLevel.next==null)
           {
-            if (level < newLevel)
-              currentLevel.next = newNode.levels.get(level);
+            if (level <= newLevel)
+              {
+               System.out.println("connecting to newNode at level "+level);
+              currentLevel.next = newNode.levels.get(level); //set the current level to point to newNode
+              currentLevel.next.ownNode = newNode;
+              if(level==0)
+                {
+                  break;
+                }
+              }
             
-            if(level==0)
-              currentLevel.next=newNode.levels.get(0);
+            //if(level==0)
+              //currentLevel.next=newNode.levels.get(0);
             
             System.out.println("moving down from " + level + " to "
                                + (level - 1));
             level--;
           }//if next==null
+        
+        //done=level<=0 && currentNode==newNode;
       }
-*/
+    System.out.println("done adding. Level is "+level);
+
 
   } // add(T val)
 
