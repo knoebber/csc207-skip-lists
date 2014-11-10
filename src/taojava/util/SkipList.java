@@ -62,13 +62,18 @@ public class SkipList<T extends Comparable<T>>
   // +--------------+----------------------------------------------------
   // | Constructors |
   // +--------------+
-  public SkipList()
+  public SkipList(double prob)
   {
     this.header = new Node();
     this.header.levels.add(0, new NodeLevel(null, null));
-    this.prob = .5; //the probability that determines height
+    this.prob = prob; //the probability that determines height
 
   }//SkipList constructor
+
+  public SkipList()
+  {
+    this(.5);
+  }
 
   // +-------------------------+-----------------------------------------
   // | Internal Helper Methods |
@@ -112,11 +117,6 @@ public class SkipList<T extends Comparable<T>>
       }; // new Iterator<T>
   } // iterator()
 
-  public void printConnections()
-  {
-
-  }
-
   // +------------------------+------------------------------------------
   // | Methods from SimpleSet |
   // +------------------------+
@@ -132,7 +132,6 @@ public class SkipList<T extends Comparable<T>>
   public void add(T val)
   {
     System.out.println("***** val: " + val);
-    System.out.println("current length "+length());
     Node newNode = new Node();
     newNode.val = val; //set the node value
 
@@ -143,8 +142,8 @@ public class SkipList<T extends Comparable<T>>
         newNode.levels.add(i, new NodeLevel(newNode, null)); //sets newNodes pointers to null
       }
     //if (length() == 0)
-      //header.levels.set(0, new NodeLevel(header, newNode.levels.get(0)));
-    int level=header.levels.size()-1;
+    //header.levels.set(0, new NodeLevel(header, newNode.levels.get(0)));
+    int level = header.levels.size() - 1;
     if (level < newLevel) //connect the header if new is higher
       for (int i = header.levels.size(); i <= newLevel; i++)
         //header.levels.add(i, newNode.levels.get(i));
@@ -155,45 +154,33 @@ public class SkipList<T extends Comparable<T>>
     //int level = header.levels.size() - 1;
     NodeLevel currentLevel;
     //NodeLevel currentLevel = header.levels.get(header.levels.size() - 1);
-    boolean done=false;
-    while (!done)
+
+    while (true)
       {
-        System.out.println("currentNode==newNode "+(currentNode==newNode));
-        System.out.println("currentNode val= "+currentNode.val);
+        //System.out.println("currentNode val= " + currentNode.val);
         currentLevel = currentNode.levels.get(level);
-        System.out.println("current level: "+level);
+       //System.out.println("current level: " + level);
         //System.out.println("next node: "+ currentLevel.next.ownNode);
-        
+
         if (currentLevel.next != null) //move sideways
           {
-            System.out.println("moving sideways from "+currentNode.val+" to "+currentLevel.next.ownNode.val);
             currentNode = currentLevel.next.ownNode;
           }
-        if(currentLevel.next==null)
+        if (currentLevel.next == null)
           {
             if (level <= newLevel)
               {
-               System.out.println("connecting to newNode at level "+level);
-              currentLevel.next = newNode.levels.get(level); //set the current level to point to newNode
-              currentLevel.next.ownNode = newNode;
-              if(level==0)
-                {
-                  break;
-                }
+                currentLevel.next = newNode.levels.get(level); //set the current level to point to newNode
+                currentLevel.next.ownNode = newNode;
+                if (level == 0)
+                  {
+                    break;
+                  }
               }
-            
-            //if(level==0)
-              //currentLevel.next=newNode.levels.get(0);
-            
-            System.out.println("moving down from " + level + " to "
-                               + (level - 1));
             level--;
           }//if next==null
-        
         //done=level<=0 && currentNode==newNode;
       }
-    System.out.println("done adding. Level is "+level);
-
 
   } // add(T val)
 
@@ -203,15 +190,42 @@ public class SkipList<T extends Comparable<T>>
   public boolean contains(T val)
   {
     Node currentNode = header;
-    if (currentNode.val != val)
+
+    int level = header.levels.size() - 1;
+    NodeLevel currentLevel = header.levels.get(level);
+    while (true)
       {
-        currentNode = currentNode.levels.get(0).next.ownNode;
-      } // if
-    else
-      {
-        return true;
-      }
-    return false;
+        currentLevel = currentNode.levels.get(level);
+        //System.out.println("checking value: "+currentLevel.next.ownNode.val);
+        if (currentLevel.next != null)
+          {
+            int comparison = currentLevel.next.ownNode.val.compareTo(val);
+            if (comparison < 0)
+              {
+                currentNode = currentLevel.next.ownNode;
+              }//if next<val
+            if (comparison > 0)
+              {
+                if (level == 0)
+                  {
+                    return false;
+                  } // if at the end
+                level--;
+              }//if next>val
+            if (comparison == 0)
+              {
+                return true;
+              }//if next==val
+          } // if next exists
+        else
+          {
+            if (level == 0)
+              {
+                return false;
+              } // if at the end
+            level--;//move down
+          } // else
+      } // while
   } // contains(T)
 
   /**
@@ -223,9 +237,58 @@ public class SkipList<T extends Comparable<T>>
    */
   public void remove(T val)
   {
-    if (contains(val))
+    Node currentNode = header;
+    // val?
+    int level = header.levels.size() - 1;
+    NodeLevel currentLevel = header.levels.get(level);
+    while (true)
       {
-
+        currentLevel = currentNode.levels.get(level);
+        if (currentLevel.next != null)
+          {
+            int comparison = currentLevel.next.ownNode.val.compareTo(val);
+            if (comparison < 0)
+              {
+                currentNode = currentLevel.next.ownNode;
+                System.out.println("going sideways");
+              }//if next<val
+            if (comparison > 0)
+              {
+                if (level == 0)
+                  {
+                    break;
+                  } // if at the end
+                level--;
+                System.out.println("moving down");
+              }//if next>0
+            if (comparison == 0)
+              {
+                //change pt
+                if (currentLevel.next.next != null)
+                  {
+                    currentNode.levels.get(level).next = currentLevel.next.next;
+                    //System.out.println("connecting at level "+level+": "+currentNode.val+" to "+currentLevel.next.next.ownNode.val);
+                  }
+                else
+                  {
+                    currentNode.levels.get(level).next = null;
+                    System.out.println("connecting at level "+level+" to null");
+                  }
+                if (level == 0)
+                  {
+                    break;
+                  } // if at the end
+                level--;//move down
+              }//if next==0
+          } // if next exists
+        else
+          {
+            if (level == 0)
+              {
+                break;
+              } // if at the end
+            level--;//move down
+          } // else
       }
   } // remove(T)
 
@@ -241,8 +304,12 @@ public class SkipList<T extends Comparable<T>>
    */
   public T get(int i)
   {
-    // STUB
-    return null;
+    Iterator iter = iterator();
+    for(int j = 0; j < i; j++)
+      {
+        iter.next();
+      }
+    return (T) iter.next();
   } // get(int)
 
   /**

@@ -56,7 +56,7 @@ public class SortedListTest
       } // for
     System.err.println("]");
   } // dump
-  
+
   /**
    * Determine if an iterator only returns values in non-decreasing
    * order.
@@ -182,7 +182,7 @@ public class SortedListTest
     ArrayList<String> operations = new ArrayList<String>();
     // Keep track of the values that are currently in the sorted list.
     ArrayList<Integer> vals = new ArrayList<Integer>();
-    
+
     // Add a bunch of values
     for (int i = 0; i < 1000; i++)
       {
@@ -209,7 +209,8 @@ public class SortedListTest
             vals.remove((Integer) rand);
             if (ints.contains(rand))
               {
-                System.err.println("After removing " + rand + " contains succeeds");
+                System.err.println("After removing " + rand
+                                   + " contains succeeds");
                 ok = false;
               } // if ints.contains(rand)
           } // if we remove
