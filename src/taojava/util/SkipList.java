@@ -131,12 +131,12 @@ public class SkipList<T extends Comparable<T>>
 
   public void add(T val)
   {
-    System.out.println("***** val: " + val);
+    //System.out.println("***** val: " + val);
     Node newNode = new Node();
     newNode.val = val; //set the node value
 
     int newLevel = randomLevel();
-    System.out.println("newLevel: " + newLevel);
+    //System.out.println("newLevel: " + newLevel);
     for (int i = 0; i <= newLevel; i++)
       {
         newNode.levels.add(i, new NodeLevel(newNode, null)); //sets newNodes pointers to null

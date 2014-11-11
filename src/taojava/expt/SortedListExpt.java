@@ -62,7 +62,7 @@ public class SortedListExpt
     // Iterate through the list once.
     heading(pen, "Iterating again");
     for (String str : strings)
-      ;
+      ;0
 
     // Add a few more strings
     String[] second =
