@@ -111,6 +111,103 @@ public class SortedListTest
     assertFalse(strings.contains("hello"));
   } // emptyTest()
 
+  @Test
+  public void checkLength()
+  {
+    assertEquals(0, strings.length());
+    strings.add("apple");
+    strings.add("can");
+    assertEquals(2, strings.length());
+    for (int i = 0; i < 100; i++)
+      ints.add(i);
+
+    assertEquals(100, ints.length());
+  }
+
+  /**
+   * Tests if a list is empty after adding elements and removing
+   * all of the elements not in order
+   */
+  @Test
+  public void testEmpty()
+  {
+    strings.add("a");
+    strings.add("b");
+    strings.add("d");
+    strings.add("z");
+
+    strings.remove("d");
+    strings.remove("z");
+    strings.remove("a");
+    strings.remove("b");
+    assertEquals(0, strings.length());
+  }
+
+  @Test
+  public void testGet()
+  {
+    ints.add(1);
+    ints.add(0);
+    ints.add(2);
+    ints.add(3);
+    int result;
+    for (int i = 0; i < 4; i++)
+      {
+        result = ints.get(i);
+        assertEquals(i, result);
+      }
+
+  }
+
+  /**
+   * Test if remove removes multiples of a value
+   */
+  @Test
+  public void removeMultiples()
+  {
+    ints.add(1);
+    ints.add(1);
+    ints.add(1);
+    ints.add(3);
+    ints.remove(1);
+    assertFalse(ints.contains(1));
+  }
+
+  /**
+   * This was actually a problem that we had. 
+   */
+  @Test
+  public void testLargeIntDuplicateRemove()
+  {
+    int val = 128;
+    ints.add(val);
+    ints.add(val);
+    ints.remove(val);
+    assertFalse(ints.contains(128));
+  }
+
+  /**
+   * Tests the iterator.
+   */
+  @Test
+  public void testIterator()
+  {
+    
+    strings.add("cat");
+    strings.add("bat");
+    strings.add("computer");
+    strings.add("dinner");
+    strings.add("phone");
+    Iterator iter=strings.iterator();
+    assertEquals("bat",iter.next());
+    assertEquals("cat",iter.next());
+    assertEquals("computer",iter.next());
+    assertEquals("dinner",iter.next());
+    assertEquals("phone",iter.next());
+    assertFalse(iter.hasNext());
+   
+  }
+
   // +-----------------+-------------------------------------------------
   // | RandomizedTests |
   // +-----------------+

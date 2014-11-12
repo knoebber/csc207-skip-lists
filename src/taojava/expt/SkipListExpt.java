@@ -18,18 +18,34 @@ public class SkipListExpt
   
     PrintWriter pen = new PrintWriter(System.out, true);
     //ArrayList test = new ArrayList<String>();
-//    SkipList<Integer> skip = new SkipList<Integer>(.8);
-//    skip.add(0);
+    SkipList<Integer> ints = new SkipList<Integer>();
+    SkipList<String> strings=new SkipList<String>();
+    //strings.add("alphabetical");
+    //strings.add("alphabetical");
+    //strings.remove("alphabetical");
+    //pen.println(strings.contains("alphabetical"));
+//    skip.add(6);
 //    skip.add(3);
-//    skip.add(7);
-//    skip.add(9);
-//    pen.println(skip.contains(7));
-//    skip.remove(7);
-//    pen.println(skip.contains(7));
-//    pen.println("get 2nd: "+skip.get(1));
-//    pen.println("length: "+skip.length());
-    //pen.println(skip.contains(0));
-    SortedListExpt.stringExperiment(pen, new SkipList<String>());
+//    skip.add(1);
+//    skip.add(2);
+
+
+    int val = 128;
+    ints.add(val);
+    ints.add(val);
+    ints.remove(val);
+    pen.println(ints.contains(val));
+    //pen.println(ints.get(0));
+
+    
+//    pen.println(skip.get(0));
+//    pen.println(skip.get(1));
+//    pen.println(skip.get(2));
+    
+    //pen.println("length: "+s.length());
+    
+    
+    //SortedListExpt.stringExperiment(pen, new SkipList<String>());
    
     pen.flush();
   } // main(String[])

@@ -62,7 +62,7 @@ public class SortedListExpt
     // Iterate through the list once.
     heading(pen, "Iterating again");
     for (String str : strings)
-      ;0
+      ;
 
     // Add a few more strings
     String[] second =
@@ -78,7 +78,7 @@ public class SortedListExpt
     // And look up elements by index
     heading(pen, "Iterating by index");
     int len = slist.length();
-    for (int i = 1; i < len; i+= 3)
+    for (int i = 1; i < len; i += 3)
       strings.get(i);
   } // stringExperiment
 } // SortedListExpt
