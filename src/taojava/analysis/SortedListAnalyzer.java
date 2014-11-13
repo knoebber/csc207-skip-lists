@@ -61,7 +61,7 @@ public class SortedListAnalyzer
         sl.get(random.nextInt(len));
       } // for
     indices.stop();
-
+    
     // Iterate
     iterate.start();
     for (Integer i : sl)

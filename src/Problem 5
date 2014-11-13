@@ -1,0 +1,22 @@
+After reading a number of the code files that are part of the project, three interesting
+things we learned in reading those files are:
+
+1. The randomTest() procedure in SortedListTest.java is in our opinion a well designed
+	test that creatively uses another array list to hold the tests being done, then
+	prints the array if an error is encountered. We could use this approach for testing
+	other programs, debugging, as well as simply keeping track of iterations in code.
+	
+2. SkipList.java implements the SortedList interface, which itself extends 4 other 
+	classes. This is a good example of polymorphism and class inheritance, which shows
+	how powerful Java's class structure can be. We could use this dynamic approach
+	in other cases, such as if we wanted an interface that was a combination of
+	previously known class structures, which would save time and increase individual
+	class clarity. 
+	
+3. In SortedListAnalyzer.java the analyze(SortedList<Integer> sl, int n) 
+	method makes use of multiple timers to track the efficiency of multiple
+	functions over the course of many repetitions. This is much simpler than using one
+	timer to do the same task, since you can then compare all of the timers at once for
+	a more detailed analysis. We could use this helpful approach in future
+	analyses of our own to increase the efficiency of our testing over many types
+	and iterations.

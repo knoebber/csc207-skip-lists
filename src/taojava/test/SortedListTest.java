@@ -120,9 +120,11 @@ public class SortedListTest
     assertEquals(2, strings.length());
     for (int i = 0; i < 100; i++)
       ints.add(i);
-
+    
     assertEquals(100, ints.length());
-  }
+    ints.remove(99);
+    assertEquals(99, ints.length());
+  }//checkLength
 
   /**
    * Tests if a list is empty after adding elements and removing
@@ -141,7 +143,7 @@ public class SortedListTest
     strings.remove("a");
     strings.remove("b");
     assertEquals(0, strings.length());
-  }
+  }//testEmpty
 
   @Test
   public void testGet()
@@ -155,9 +157,9 @@ public class SortedListTest
       {
         result = ints.get(i);
         assertEquals(i, result);
-      }
+      }//for
 
-  }
+  }//testGet
 
   /**
    * Test if remove removes multiples of a value
@@ -171,7 +173,7 @@ public class SortedListTest
     ints.add(3);
     ints.remove(1);
     assertFalse(ints.contains(1));
-  }
+  }//removeMultiples
 
   /**
    * This was actually a problem that we had. 
@@ -184,7 +186,31 @@ public class SortedListTest
     ints.add(val);
     ints.remove(val);
     assertFalse(ints.contains(128));
-  }
+  }//testLargeIntDuplicateRemove
+  
+  @Test
+  public void testAllOperations()
+  {
+    for(int i=0;i<1000;i++)
+      {
+        ints.add(i);
+        assertEquals(ints.length(),i+1);
+        assertTrue(ints.contains(i));
+        assertEquals(ints.get(i),(Object) i);
+      }
+    Iterator iter=ints.iterator();
+    Integer val;
+    while(iter.hasNext())
+      {
+        val=(Integer) iter.next(); 
+        if(iter.hasNext())
+          assertTrue(val<(Integer)iter.next());
+        iter.remove();
+      }
+    
+  }//testLargeIntDuplicateRemove
+  
+  
 
   /**
    * Tests the iterator.
@@ -206,7 +232,7 @@ public class SortedListTest
     assertEquals("phone",iter.next());
     assertFalse(iter.hasNext());
    
-  }
+  }//testIterator
 
   // +-----------------+-------------------------------------------------
   // | RandomizedTests |
